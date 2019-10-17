@@ -151,7 +151,6 @@ public class Painter implements KeyboardHandler {
                 moveIn(Direction.RIGHT);
                 break;
             case KeyboardEvent.KEY_SPACE:
-                //paint(Color.BLACK);
                 this.allowedToPaint = !allowedToPaint;
                 break;
             case KeyboardEvent.KEY_E:

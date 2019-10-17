@@ -11,11 +11,13 @@ public class Painter implements KeyboardHandler {
     private Rectangle rectangle;
     private Keyboard keyboard;
     private int speed;
+    private boolean allowedToPaint;
 
     Painter(Cell cell, Color color, int speed) {
 
         this.currentCell = cell;
         this.speed = speed;
+        this.allowedToPaint = false;
         int column = cell.getColumn();
         int row = cell.getRow();
         Grid grid = cell.getParentGrid();
@@ -127,8 +129,11 @@ public class Painter implements KeyboardHandler {
 
         currentCell = grid.getCell(newCoordinates[0], newCoordinates[1]);
         rectangle.translate(grid.columnsToXPixels(newCoordinates[0] - column), grid.rowsToYPixels(newCoordinates[1] - row));
+        if (allowedToPaint) {
+            paint(Color.BLACK);
+        }
+        rectangle.fill();
     }
-
 
     @Override
     public void keyPressed(KeyboardEvent keyboardEvent) {
@@ -146,7 +151,8 @@ public class Painter implements KeyboardHandler {
                 moveIn(Direction.RIGHT);
                 break;
             case KeyboardEvent.KEY_SPACE:
-                paint(Color.BLACK);
+                //paint(Color.BLACK);
+                this.allowedToPaint = !allowedToPaint;
                 break;
             case KeyboardEvent.KEY_E:
                 decolorize();

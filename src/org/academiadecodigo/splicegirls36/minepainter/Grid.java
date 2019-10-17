@@ -74,8 +74,8 @@ public class Grid implements Serializable {
             int column = in.readInt();
             int row = in.readInt();
 
-            painter.setCurrentCell(getCell(column, row));
             painter.redraw(column, row, Color.GREEN);
+            painter.setCurrentCell(getCell(column, row));
             System.out.println("Game loaded!!");
         } catch (IOException  e) {
             System.err.println(e.getMessage());

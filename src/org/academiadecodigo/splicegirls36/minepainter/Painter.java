@@ -87,12 +87,10 @@ public class Painter implements KeyboardHandler, Serializable {
 
     public void redraw(int column, int row, Color color) {
         Grid grid = currentCell.getParentGrid();
+        int oldColumn = currentCell.getColumn();
+        int oldRow = currentCell.getRow();
 
-        rectangle.translate(grid.columnToX(column - getColumn()), grid.rowToY(row - getRow()));
-        //rectangle.delete();
-        //rectangle = new Rectangle(grid.columnToX(column), grid.rowToY(row), grid.getCellSize(), grid.getCellSize());
-        rectangle.setColor(color);
-        rectangle.fill();
+        rectangle.translate(grid.columnsToXPixels(column - oldColumn), grid.rowsToYPixels(row - oldRow));
     }
 
     public Color getColor() {

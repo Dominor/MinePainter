@@ -7,9 +7,10 @@ import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 import java.io.*;
 
 
-public class Grid implements Serializable {
+public class Grid {
 
     public static final int PADDING = 10;
+    public static final int SPEED = 1;
 
     private Cell[][] matrix;
     private Rectangle rectangle;
@@ -41,7 +42,7 @@ public class Grid implements Serializable {
 
         rectangle.draw();
         initMatrix();
-        this.painter = new Painter(matrix[0][0], Color.GREEN);
+        this.painter = new Painter(matrix[0][0], Color.GREEN, SPEED);
     }
 
     void clear() {
@@ -71,12 +72,6 @@ public class Grid implements Serializable {
                 }
             }
 
-            int column = in.readInt();
-            int row = in.readInt();
-
-            painter.redraw(column, row, Color.GREEN);
-            painter.setCurrentCell(getCell(column, row));
-            System.out.println("Game loaded!!");
         } catch (IOException  e) {
             System.err.println(e.getMessage());
         } finally {
@@ -138,14 +133,12 @@ public class Grid implements Serializable {
     public int rowToY (int row) {
 
         int result = PADDING + (row * cellSize);
-        //System.out.println("Row: " + result);
         return PADDING + (row * cellSize);
     }
 
     public int columnToX (int column) {
 
         int result = PADDING + (column * cellSize);
-        //System.out.println("Column: " + result);
         return PADDING + (column * cellSize);
     }
 

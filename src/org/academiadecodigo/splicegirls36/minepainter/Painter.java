@@ -4,17 +4,18 @@ package org.academiadecodigo.splicegirls36.minepainter;
 import org.academiadecodigo.simplegraphics.graphics.*;
 import org.academiadecodigo.simplegraphics.keyboard.*;
 
-import java.io.Serializable;
 
-public class Painter implements KeyboardHandler, Serializable {
+public class Painter implements KeyboardHandler {
 
     private Cell currentCell;
     private Rectangle rectangle;
     private Keyboard keyboard;
+    private int speed;
 
-    Painter(Cell cell, Color color) {
+    Painter(Cell cell, Color color, int speed) {
 
         this.currentCell = cell;
+        this.speed = speed;
         int column = cell.getColumn();
         int row = cell.getRow();
         Grid grid = cell.getParentGrid();
@@ -85,16 +86,35 @@ public class Painter implements KeyboardHandler, Serializable {
         currentCell.show();
     }
 
-    public void redraw(int column, int row, Color color) {
-        Grid grid = currentCell.getParentGrid();
-        int oldColumn = currentCell.getColumn();
-        int oldRow = currentCell.getRow();
-
-        rectangle.translate(grid.columnsToXPixels(column - oldColumn), grid.rowsToYPixels(row - oldRow));
-    }
-
     public Color getColor() {
         return rectangle.getColor();
+    }
+
+    private int[] calculateNewCoordinates(int column, int row, Direction direction) {
+
+        int[] result = new int[2];
+        Grid grid = currentCell.getParentGrid();
+
+        switch (direction) {
+
+            case UP:
+                result[0] = column;
+                result[1] = (row - speed) < 0 ? row : row - speed;
+                break;
+            case DOWN:
+                result[0] = column;
+                result[1] = (row + speed > grid.getRows() - speed) ? row : row + speed;
+                break;
+            case LEFT:
+                result[0] = (column - speed < 0) ? column : column - speed;
+                result[1] = row;
+                break;
+            case RIGHT:
+                result[0] = (column + speed > grid.getColumns() - speed) ? column : column + speed;
+                result[1] = row;
+                break;
+        }
+        return result;
     }
 
     public void moveIn(Direction direction) {
@@ -103,40 +123,10 @@ public class Painter implements KeyboardHandler, Serializable {
         int row = currentCell.getRow();
         Grid grid = currentCell.getParentGrid();
 
-        switch (direction) {
+        int[] newCoordinates = calculateNewCoordinates(column, row, direction);
 
-            case UP:
-                if (row - 1 < 0) {
-                    return;
-                }
-                currentCell = grid.getCell(column, row - 1);
-                rectangle.translate(0, grid.rowsToYPixels(-1));
-                break;
-            case LEFT:
-                if (column - 1 < 0) {
-                    return;
-                }
-                currentCell = grid.getCell(column - 1, row);
-                rectangle.translate(grid.columnsToXPixels(-1), 0);
-                break;
-            case RIGHT:
-                if (column + 1 > grid.getColumns() - 1) {
-                    return;
-                }
-                currentCell = grid.getCell(column + 1, row);
-                rectangle.translate(grid.columnsToXPixels(1), 0);
-                break;
-            case DOWN:
-                if (row + 1 > grid.getRows() - 1) {
-                    return;
-                }
-                currentCell = grid.getCell(column, row + 1);
-                rectangle.translate(0, grid.rowsToYPixels(1));
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal Direction.");
-        }
-
+        currentCell = grid.getCell(newCoordinates[0], newCoordinates[1]);
+        rectangle.translate(grid.columnsToXPixels(newCoordinates[0] - column), grid.rowsToYPixels(newCoordinates[1] - row));
     }
 
 

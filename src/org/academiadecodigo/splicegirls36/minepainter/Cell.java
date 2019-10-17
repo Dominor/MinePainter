@@ -3,9 +3,8 @@ package org.academiadecodigo.splicegirls36.minepainter;
 import org.academiadecodigo.simplegraphics.graphics.Color;
 import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 
-import java.io.Serializable;
 
-public class Cell implements Serializable {
+public class Cell {
 
     private Grid parentGrid;
     private int column;

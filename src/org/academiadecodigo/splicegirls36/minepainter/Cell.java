@@ -22,18 +22,18 @@ public class Cell {
 
     public void show () {
 
-        rectangle.draw();
+        this.rectangle.draw();
     }
 
     public void hide() {
-        rectangle.delete();
+        this.rectangle.draw();
         this.painted = false;
     }
 
     public void fill(Color color) {
 
-        rectangle.setColor(color);
-        rectangle.fill();
+        this.rectangle.setColor(color);
+        this.rectangle.fill();
         this.painted = true;
     }
 

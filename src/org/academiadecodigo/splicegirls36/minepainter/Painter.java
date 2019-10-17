@@ -4,7 +4,6 @@ package org.academiadecodigo.splicegirls36.minepainter;
 import org.academiadecodigo.simplegraphics.graphics.*;
 import org.academiadecodigo.simplegraphics.keyboard.*;
 
-
 public class Painter implements KeyboardHandler {
 
     private Cell currentCell;
@@ -38,6 +37,7 @@ public class Painter implements KeyboardHandler {
         KeyboardEvent eventC = new KeyboardEvent();
         KeyboardEvent eventS = new KeyboardEvent();
         KeyboardEvent eventL = new KeyboardEvent();
+        KeyboardEvent eventP = new KeyboardEvent();
 
 
         eventUP.setKey(KeyboardEvent.KEY_UP);
@@ -49,6 +49,7 @@ public class Painter implements KeyboardHandler {
         eventC.setKey(KeyboardEvent.KEY_C);
         eventS.setKey(KeyboardEvent.KEY_S);
         eventL.setKey(KeyboardEvent.KEY_L);
+        eventP.setKey(KeyboardEvent.KEY_P);
 
         eventUP.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
         eventDOWN.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
@@ -59,6 +60,7 @@ public class Painter implements KeyboardHandler {
         eventC.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
         eventS.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
         eventL.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+        eventP.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
 
         keyboard.addEventListener(eventUP);
         keyboard.addEventListener(eventDOWN);
@@ -69,17 +71,20 @@ public class Painter implements KeyboardHandler {
         keyboard.addEventListener(eventC);
         keyboard.addEventListener(eventS);
         keyboard.addEventListener(eventL);
+        keyboard.addEventListener(eventP);
     }
 
     public void show(Color color) {
         rectangle.setColor(color);
-        rectangle.draw();
         rectangle.fill();
+        paint(Grid.PAINT_COLOR);
     }
 
     public void paint(Color color) {
 
-        currentCell.fill(color);
+        if(allowedToPaint) {
+            currentCell.fill(color);
+        }
     }
 
     public void decolorize() {
@@ -129,9 +134,7 @@ public class Painter implements KeyboardHandler {
 
         currentCell = grid.getCell(newCoordinates[0], newCoordinates[1]);
         rectangle.translate(grid.columnsToXPixels(newCoordinates[0] - column), grid.rowsToYPixels(newCoordinates[1] - row));
-        if (allowedToPaint) {
-            paint(Color.BLACK);
-        }
+        paint(Grid.PAINT_COLOR);
         rectangle.fill();
     }
 
@@ -151,7 +154,9 @@ public class Painter implements KeyboardHandler {
                 moveIn(Direction.RIGHT);
                 break;
             case KeyboardEvent.KEY_SPACE:
-                this.allowedToPaint = !allowedToPaint;
+                togglePainting();
+                paint(Grid.PAINT_COLOR);
+                togglePainting();
                 break;
             case KeyboardEvent.KEY_E:
                 decolorize();
@@ -166,6 +171,9 @@ public class Painter implements KeyboardHandler {
                 System.out.println("L registered");
                 currentCell.getParentGrid().load();
                 break;
+            case KeyboardEvent.KEY_P:
+                togglePainting();
+                break;
             default:
                 throw new IllegalArgumentException("Illegal Direction");
         }
@@ -174,6 +182,10 @@ public class Painter implements KeyboardHandler {
     @Override
     public void keyReleased(KeyboardEvent keyboardEvent) {
 
+    }
+
+    void togglePainting() {
+        this.allowedToPaint = !this.allowedToPaint;
     }
 
     public int getColumn() {

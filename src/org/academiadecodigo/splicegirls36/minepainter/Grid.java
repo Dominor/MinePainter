@@ -1,6 +1,5 @@
 package org.academiadecodigo.splicegirls36.minepainter;
 
-import org.academiadecodigo.simplegraphics.graphics.Canvas;
 import org.academiadecodigo.simplegraphics.graphics.Color;
 import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 
@@ -9,8 +8,13 @@ import java.io.*;
 
 public class Grid {
 
+    // Constants
+
     public static final int PADDING = 10;
     public static final int SPEED = 1;
+    public static final Color PAINT_COLOR = Color.BLACK;
+    public static final Color PAINTER_FILL_COLOR = Color.GREEN;
+
 
     private Cell[][] matrix;
     private Rectangle rectangle;
@@ -42,7 +46,7 @@ public class Grid {
 
         rectangle.draw();
         initMatrix();
-        this.painter = new Painter(matrix[0][0], Color.GREEN, SPEED);
+        this.painter = new Painter(matrix[0][0], PAINTER_FILL_COLOR, SPEED);
     }
 
     void clear() {
@@ -53,6 +57,8 @@ public class Grid {
                 matrix[i][j].show();
             }
         }
+
+        painter.show(PAINTER_FILL_COLOR);
     }
 
     void load() {
@@ -67,7 +73,7 @@ public class Grid {
                 for (int j = 0; j < matrix[i].length; j++) {
 
                     if (in.readBoolean()) {
-                        matrix[i][j].fill(Color.BLACK);
+                        matrix[i][j].fill(PAINT_COLOR);
                     }
                 }
             }
